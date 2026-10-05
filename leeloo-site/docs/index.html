@@ -77,6 +77,17 @@ section.block{padding:72px 0}
 video{display:block;width:100%;aspect-ratio:16/9;background:var(--ink)}
 .below{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:center}
 .muted{color:var(--text-muted);font-size:14px}
+[hidden]{display:none!important}
+
+/* video gate (HubSpot form unlocks the demo) */
+.gate{position:relative;aspect-ratio:16/9;display:grid;place-items:center;padding:48px}
+.gate-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(6px);transform:scale(1.06);opacity:.55}
+.gate-shade{position:absolute;inset:0;background:linear-gradient(135deg,rgba(21,12,47,.92),rgba(14,10,46,.78))}
+.gate-inner{position:relative;display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:center;width:100%;max-width:980px;text-align:left}
+.gate-copy h3{font:700 clamp(26px,3vw,38px)/1.15 var(--font);letter-spacing:-.01em;color:#fff;margin:18px 0 12px;text-wrap:balance}
+.gate-copy p{color:var(--on-dark-muted);font-size:17px}
+.gate-form{background:#fff;border-radius:var(--r-xl);padding:28px;box-shadow:var(--shadow-lift);min-height:260px;text-align:left}
+.gate-note{color:var(--text-body);font-size:14px}
 
 /* slides (shown exactly as submitted) */
 .lilac-band{background:var(--lilac)}
@@ -115,7 +126,11 @@ footer .big{width:100%;max-width:760px;opacity:.92;display:block}
 footer .row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);margin-top:36px;padding-top:24px;font-size:14px;color:var(--on-dark-muted)}
 footer h4{font:700 14px/1 var(--font);color:var(--yellow);margin-bottom:14px}
 
-@media (max-width:960px){.team{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:960px){
+  .team{grid-template-columns:repeat(2,1fr)}
+  .gate{padding:40px 24px}
+  .gate-inner{grid-template-columns:1fr;gap:24px;max-width:560px;text-align:center}
+}
 @media (max-width:620px){
   .wrap{padding:0 16px}
   .hero{padding:56px 0 48px}
@@ -126,6 +141,8 @@ footer h4{font:700 14px/1 var(--font);color:var(--yellow);margin-bottom:14px}
   .close{padding:28px 16px;border-radius:var(--r-2xl)}
   .close .inner{padding:28px 20px}
   .media{border-radius:var(--r-xl)}
+  .gate{padding:28px 16px}
+  .gate-form{padding:20px 16px}
 }
 </style>
 </head>
@@ -167,13 +184,30 @@ footer h4{font:700 14px/1 var(--font);color:var(--yellow);margin-bottom:14px}
       <h2>Leeloo, end to end</h2>
       <p>The five-and-a-half-minute demo the judges saw, with music.</p>
     </div>
-    <div class="media">
+    <div class="media" id="player">
+      <div class="gate" id="gate">
+        <img class="gate-bg" src="assets/slide-3.jpg" alt="">
+        <div class="gate-shade"></div>
+        <div class="gate-inner">
+          <div class="gate-copy">
+            <span class="badge yellow">Unlock the demo</span>
+            <h3>Fill in the form to watch Leeloo in action</h3>
+            <p>It takes a few seconds. Once you submit, the full 5:28 demo plays right here.</p>
+          </div>
+          <div class="gate-form">
+            <div id="hs-form"></div>
+            <p class="gate-note" id="gate-fallback" hidden>The form didn't load. If you use an ad or tracker blocker, allow this page and reload.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <template id="player-tpl">
       <video controls playsinline preload="metadata" poster="assets/slide-3.jpg">
         <source src="Leeloo-With-Music.mp4" type="video/mp4">
         Your browser can't play this video. <a href="Leeloo-With-Music.mp4">Download it instead.</a>
       </video>
-    </div>
-    <div class="below">
+    </template>
+    <div class="below" id="video-below" hidden>
       <a class="btn secondary sm" href="Leeloo-With-Music.mp4" download>Download the video</a>
       <span class="muted">MP4 · 5:28 · 9.6 MB</span>
     </div>
@@ -263,7 +297,8 @@ footer h4{font:700 14px/1 var(--font);color:var(--yellow);margin-bottom:14px}
   document.getElementById('next').onclick=function(){go(i+1)};
   dots.forEach(function(el,k){el.onclick=function(){go(k)}});
   document.addEventListener('keydown',function(e){
-    if(e.target.tagName==='VIDEO')return;
+    var t=e.target;
+    if(t.tagName==='VIDEO'||t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable)return;
     if(e.key==='ArrowRight')go(i+1); if(e.key==='ArrowLeft')go(i-1);});
   var x0=null;
   stage.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
@@ -275,6 +310,43 @@ footer h4{font:700 14px/1 var(--font);color:var(--yellow);margin-bottom:14px}
     else if(stage.requestFullscreen)stage.requestFullscreen();
     else if(stage.webkitRequestFullscreen)stage.webkitRequestFullscreen();};
   if(!(stage.requestFullscreen||stage.webkitRequestFullscreen))fs.style.display='none';
+})();
+
+/* Video gate: the demo stays locked until the HubSpot form is submitted.
+   A submission is remembered in this browser so returning visitors go straight to the video. */
+(function(){
+  var KEY='leeloo-demo-unlocked',FORM_ID='2d4ac908-54be-4353-9137-d3b1c4af9823',done=false;
+  var player=document.getElementById('player'),below=document.getElementById('video-below'),
+      fallback=document.getElementById('gate-fallback'),target=document.getElementById('hs-form');
+  function unlock(){
+    if(done)return;done=true;
+    try{localStorage.setItem(KEY,'1')}catch(e){}
+    player.innerHTML='';
+    player.appendChild(document.getElementById('player-tpl').content.cloneNode(true));
+    below.hidden=false;
+  }
+  var remembered=false;
+  try{remembered=localStorage.getItem(KEY)==='1'}catch(e){}
+  if(remembered){unlock();return;}
+
+  function showFallback(){if(!done&&!target.children.length)fallback.hidden=false;}
+  window.addEventListener('message',function(e){
+    var d=e.data;
+    if(d&&d.type==='hsFormCallback'&&d.eventName==='onFormSubmitted'&&d.id===FORM_ID)setTimeout(unlock,1200);
+  });
+  var s=document.createElement('script');
+  s.src='https://js-eu1.hsforms.net/forms/embed/v2.js';s.charset='utf-8';s.async=true;
+  s.onload=function(){
+    if(!window.hbspt){showFallback();return;}
+    hbspt.forms.create({
+      portalId:'25785594',formId:FORM_ID,region:'eu1',target:'#hs-form',
+      inlineMessage:'Thanks. Your video is unlocking now.',
+      onFormSubmitted:function(){setTimeout(unlock,1200)}
+    });
+  };
+  s.onerror=showFallback;
+  document.head.appendChild(s);
+  setTimeout(showFallback,10000);
 })();
 </script>
 </body>
