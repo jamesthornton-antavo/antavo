@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leeloo · Winners, 2026 Bloomreach Composable AI Hackathon</title>
+<meta name="description" content="Team The Fifth Element from Antavo took first place at the 2026 Bloomreach Composable AI Hackathon with Leeloo, an autonomous cart recovery agent.">
+<meta property="og:title" content="Leeloo · Winners, 2026 Bloomreach Composable AI Hackathon">
+<meta property="og:description" content="An autonomous cart recovery agent that decides one shopper at a time, acts on her own, and explains every call it makes.">
+<meta property="og:image" content="https://jamesthornton-antavo.github.io/antavo/assets/og-image.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#150C2F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Antavo Website Design tokens */
+:root{
+  --ink:#150C2F;--ink-deep:#0E0A2E;--purple:#6614E2;--purple-hover:#5510C2;--purple-press:#470FA6;--purple-bright:#9747FF;
+  --lavender:#DBE1FC;--periwinkle:#AABAFF;--lilac:#ECE9FE;--yellow:#F8E13E;--yellow-bright:#FEED1B;--yellow-hover:#F2D617;
+  --magenta:#FE1BF3;--surface:#F5F7FC;--white:#fff;--border:#E3E1E8;
+  --text-strong:#150C2F;--text-body:#534D68;--text-muted:#8A839F;--on-dark-muted:#B7B2C9;
+  --font:'Hanken Grotesk','Gilroy',system-ui,-apple-system,sans-serif;
+  --r-md:12px;--r-lg:16px;--r-xl:24px;--r-2xl:32px;--r-3xl:40px;--pill:999px;
+  --shadow-card:0 12px 32px rgba(78,56,146,.09);--shadow-lift:0 20px 48px rgba(78,56,146,.12);
+  --shadow-float:0 18px 40px rgba(0,0,0,.10),0 72px 72px rgba(0,0,0,.09);
+  --shadow-purple:0 12px 30px rgba(102,20,226,.30);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--surface);color:var(--text-body);font:500 16px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.blobs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(227,225,232,.7)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.nav img{height:34px;display:block}
+.nav-links{display:flex;gap:6px;align-items:center}
+
+/* badge + buttons */
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:var(--pill);font:700 12px/1 var(--font);letter-spacing:.08em;text-transform:uppercase}
+.badge.purple{background:var(--lilac);color:var(--purple)}
+.badge.dark{background:var(--ink);color:#fff}
+.badge.yellow{background:var(--yellow);color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 26px;border-radius:var(--pill);font:700 16px/1 var(--font);text-decoration:none;white-space:nowrap;border:1px solid transparent;cursor:pointer;transition:background .14s var(--ease),transform .14s var(--ease),color .14s}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--purple);color:#fff}.btn.primary:hover{background:var(--purple-hover)}
+.btn.highlight{background:var(--yellow);color:var(--ink)}.btn.highlight:hover{background:var(--yellow-hover)}
+.btn.secondary{background:#fff;color:var(--purple);border:1.5px solid var(--lavender)}.btn.secondary:hover{background:var(--lilac)}
+.btn.ghost{background:transparent;color:var(--ink)}.btn.ghost:hover{background:rgba(21,12,47,.05)}
+.btn.sm{min-height:36px;padding:8px 18px;font-size:14px}
+.btn.lg{min-height:54px;padding:15px 34px;font-size:18px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:88px 0 72px;text-align:center}
+.hero .wrap{position:relative}
+.win{font:800 clamp(72px,14vw,168px)/.92 var(--font);letter-spacing:-.02em;color:var(--ink);margin:22px 0 14px}
+.win span{background:linear-gradient(90deg,var(--purple),var(--magenta));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ev{font:700 clamp(22px,3.6vw,40px)/1.25 var(--font);color:var(--ink);letter-spacing:-.01em}
+.br{display:inline-block;margin:0 .12em 0 .06em;white-space:nowrap}
+.bri{height:.84em;width:.84em;vertical-align:-.1em;margin-right:.2em}.brw{height:.71em;width:auto;vertical-align:0}
+.lead{max-width:680px;margin:28px auto 0;font:500 clamp(17px,2vw,20px)/1.55 var(--font);color:var(--text-body)}
+.lead b{color:var(--ink);font-weight:700}
+.ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+
+/* sections */
+section.block{padding:72px 0}
+.sh{display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center;max-width:720px;margin:0 auto 40px}
+.sh h2{font:700 clamp(32px,4.6vw,55px)/1.15 var(--font);letter-spacing:-.01em;color:var(--ink);text-wrap:balance}
+.sh p{font:500 clamp(17px,1.8vw,21px)/1.4 var(--font);color:var(--text-body)}
+.media{position:relative;border-radius:var(--r-2xl);overflow:hidden;background:var(--ink);box-shadow:var(--shadow-float)}
+video{display:block;width:100%;aspect-ratio:16/9;background:var(--ink)}
+.below{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px;align-items:center}
+.muted{color:var(--text-muted);font-size:14px}
+
+/* slides (shown exactly as submitted) */
+.lilac-band{background:var(--lilac)}
+.stage{position:relative;aspect-ratio:16/9;touch-action:pan-y;background:var(--ink)}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .35s var(--ease)}
+.stage img.on{opacity:1}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:none;background:#fff;color:var(--purple);cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow-card);transition:background .14s var(--ease)}
+.arrow:hover{background:var(--lilac)}
+.arrow svg{width:20px;height:20px}
+.arrow.prev{left:16px}.arrow.next{right:16px}
+.deck-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px}
+.dots{display:flex;gap:10px;align-items:center}
+.dot{width:12px;height:12px;border-radius:var(--pill);border:none;background:var(--periwinkle);cursor:pointer;padding:0;transition:width .24s var(--ease),background .24s var(--ease)}
+.dot.on{width:36px;background:var(--purple)}
+.count{font:700 14px/1 var(--font);color:var(--ink);font-variant-numeric:tabular-nums;margin-left:8px}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+.card{background:#fff;border-radius:var(--r-xl);padding:28px;box-shadow:var(--shadow-card);transition:transform .24s var(--ease),box-shadow .24s var(--ease)}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift)}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--purple);color:#fff;display:grid;place-items:center;font:800 17px/1 var(--font);margin-bottom:18px;box-shadow:var(--shadow-purple)}
+.card:nth-child(2n) .avatar{background:var(--yellow);color:var(--ink);box-shadow:0 12px 30px rgba(248,225,62,.4)}
+.card b{display:block;font:700 19px/1.25 var(--font);color:var(--ink)}
+.card span{display:block;font:500 14px/1.4 var(--font);color:var(--text-body);margin-top:6px}
+
+/* closing */
+.close{position:relative;background:var(--ink);border-radius:var(--r-3xl);padding:64px 48px;overflow:hidden;text-align:center}
+.close .inner{position:relative;max-width:720px;margin:0 auto;background:var(--yellow);border-radius:var(--r-2xl);padding:40px 32px}
+.close h2{font:700 clamp(26px,3.4vw,36px)/1.15 var(--font);color:var(--ink);letter-spacing:-.01em;margin-bottom:12px}
+.close p{color:var(--ink);opacity:.8;margin-bottom:24px}
+
+footer{background:var(--ink-deep);color:#fff;margin-top:96px;padding:64px 0 36px;overflow:hidden}
+footer .big{width:100%;max-width:760px;opacity:.92;display:block}
+footer .row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);margin-top:36px;padding-top:24px;font-size:14px;color:var(--on-dark-muted)}
+footer h4{font:700 14px/1 var(--font);color:var(--yellow);margin-bottom:14px}
+
+@media (max-width:960px){.team{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){
+  .wrap{padding:0 16px}
+  .hero{padding:56px 0 48px}
+  .nav-links .btn.ghost{display:none}
+  section.block{padding:56px 0}
+  .arrow{width:40px;height:40px}.arrow.prev{left:8px}.arrow.next{right:8px}
+  .team{grid-template-columns:1fr}
+  .close{padding:28px 16px;border-radius:var(--r-2xl)}
+  .close .inner{padding:28px 20px}
+  .media{border-radius:var(--r-xl)}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <img src="assets/antavo-logo-tagline.png" alt="Antavo, AI Loyalty Cloud">
+    <div class="nav-links">
+      <a class="btn ghost sm" href="#slides">Slides</a>
+      <a class="btn ghost sm" href="#team">Team</a>
+      <a class="btn primary sm" href="#video">Watch the demo</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="blobs">
+    <div class="blob" style="width:620px;height:620px;background:var(--yellow-bright);left:-220px;top:-160px;opacity:.55"></div>
+    <div class="blob" style="width:560px;height:560px;background:var(--magenta);right:-220px;top:-120px;opacity:.38"></div>
+    <div class="blob" style="width:480px;height:480px;background:var(--periwinkle);left:38%;top:220px;opacity:.45"></div>
+  </div>
+  <div class="wrap">
+    <span class="badge dark">First place</span>
+    <h1 class="win"><span>WINNERS</span></h1>
+    <div class="ev">2026 <span class="br" role="img" aria-label="Bloomreach"><svg class="bri" viewBox="0 0 40.006 40.006"><g transform="translate(-561 -516)"><path d="M20,40.006A20,20,0,1,0,0,20,20,20,0,0,0,20,40.006Z" transform="translate(561 516)" fill="#ffd500"/><path d="M24.055,15.845l-.979,2.521a3.673,3.673,0,0,1,1.67,3.139,3.563,3.563,0,1,1-3.69-3.7l.918-2.56a6.122,6.122,0,0,0-7.107,6.061v6.428h2.783V26.715A6.511,6.511,0,0,0,21.2,27.728a6.267,6.267,0,0,0,2.844-11.894Z" transform="translate(561 516)"/><path d="M14.855,15.539a8.632,8.632,0,0,1,2.783-1.9V9.612H14.855Z" transform="translate(561 516)"/></g></svg><svg class="brw" viewBox="0 0 136.218 18.375"><g transform="translate(-609.46 -525.612)" fill="#150C2F"><path d="M66.682,9.612V27.739H63.776V9.612Z" transform="translate(561 516)"/><path d="M118.926,20.248v7.491h-2.9V20.732a2.916,2.916,0,1,0-5.827-.072v7.08h-2.9V20.732a2.816,2.816,0,0,0-2.922-3.022,2.928,2.928,0,0,0-2.9,3.044v6.985h-2.9V15.272h2.9V16.7a4.8,4.8,0,0,1,3.712-1.67,4.907,4.907,0,0,1,4.157,2.126,5.368,5.368,0,0,1,4.336-2.126,5.044,5.044,0,0,1,5.243,5.221Z" transform="translate(561 516)"/><path d="M128.443,15.027V18.1c-2.783-.195-4.2,1.258-4.2,3.167v6.473H121.33V15.272h2.9v1.764a5.332,5.332,0,0,1,4.213-2.009Z" transform="translate(561 516)"/><path d="M141.6,22.546h-9.813A3.641,3.641,0,0,0,135.5,25.4a3.778,3.778,0,0,0,3.484-2l2.416,1.013a6.318,6.318,0,0,1-5.755,3.579,6.4,6.4,0,0,1-6.679-6.478,6.339,6.339,0,0,1,6.44-6.478A6.243,6.243,0,0,1,141.6,22.546Zm-9.79-2.2h7.179a3.612,3.612,0,0,0-3.506-2.733,3.695,3.695,0,0,0-3.673,2.733Z" transform="translate(561 516)"/><path d="M156.288,15.272V27.739h-2.906v-1.67a5.285,5.285,0,0,1-4.179,1.909c-3.479,0-6.067-2.66-6.067-6.478s2.588-6.473,6.067-6.473a5.285,5.285,0,0,1,4.179,1.909v-1.67Zm-2.906,6.234a3.653,3.653,0,1,0-7.3,0,3.641,3.641,0,0,0,6.276,2.7,3.685,3.685,0,0,0,1.02-2.7Z" transform="translate(561 516)"/><path d="M158.314,21.506a6.5,6.5,0,0,1,12.494-2.488l-2.682.918a3.7,3.7,0,0,0-3.312-2.226,3.57,3.57,0,0,0-3.6,3.8,3.618,3.618,0,0,0,7.007,1.425l2.611,1a6.385,6.385,0,0,1-6.089,4.052,6.311,6.311,0,0,1-6.428-6.478Z" transform="translate(561 516)"/><path d="M184.678,20.515V27.75h-2.9V20.971a3.071,3.071,0,0,0-3.189-3.261,3.167,3.167,0,0,0-3.217,3.339v6.69h-2.9V9.612h2.9v7.28a5.282,5.282,0,0,1,9.306,3.623Z" transform="translate(561 516)"/><path d="M51.359,16.14V9.612h-2.9V27.739h2.9v-.885a6.545,6.545,0,0,0,3.551,1.007,6.717,6.717,0,0,0,2.443-.451,6.5,6.5,0,0,0-.028-11.827,6.769,6.769,0,0,0-2.427-.445A6.484,6.484,0,0,0,51.359,16.14Zm3.211,9.144a3.573,3.573,0,0,1-3.211-1.909,4.041,4.041,0,0,1,0-3.751,3.573,3.573,0,0,1,3.211-1.92,3.684,3.684,0,0,1,3.673,3.8,3.684,3.684,0,0,1-3.673,3.8Z" transform="translate(561 516)"/><path d="M68.83,21.506A6.573,6.573,0,1,1,75.4,27.984a6.378,6.378,0,0,1-6.573-6.478ZM75.4,25.3a3.667,3.667,0,1,0-1.436-.289A3.684,3.684,0,0,0,75.4,25.3Z" transform="translate(561 516)"/><path d="M83.423,21.506A6.578,6.578,0,1,1,90,27.984a6.384,6.384,0,0,1-6.579-6.478ZM90,25.3a3.667,3.667,0,1,0-1.436-.289A3.684,3.684,0,0,0,90,25.3Z" transform="translate(561 516)"/></g></svg></span> Composable AI Hackathon</div>
+    <p class="lead">Meet Leeloo, Team The Fifth Element's autonomous cart recovery agent. She decides one shopper at a time, acts on her own, and explains every call she makes. <b>One agent, five platforms, one closed loop.</b></p>
+    <div class="ctas">
+      <a class="btn primary lg" href="#video">Watch the demo</a>
+      <a class="btn secondary lg" href="#slides">View the slides</a>
+    </div>
+  </div>
+</header>
+
+<section class="block" id="video">
+  <div class="wrap">
+    <div class="sh">
+      <span class="badge purple">The winning demo</span>
+      <h2>Leeloo, end to end</h2>
+      <p>The five-and-a-half-minute demo the judges saw, with music.</p>
+    </div>
+    <div class="media">
+      <video controls playsinline preload="metadata" poster="assets/slide-3.jpg">
+        <source src="Leeloo-With-Music.mp4" type="video/mp4">
+        Your browser can't play this video. <a href="Leeloo-With-Music.mp4">Download it instead.</a>
+      </video>
+    </div>
+    <div class="below">
+      <a class="btn secondary sm" href="Leeloo-With-Music.mp4" download>Download the video</a>
+      <span class="muted">MP4 · 5:28 · 9.6 MB</span>
+    </div>
+  </div>
+</section>
+
+<section class="block lilac-band" id="slides">
+  <div class="wrap">
+    <div class="sh">
+      <span class="badge purple">The submission</span>
+      <h2>The slides, as submitted</h2>
+      <p>Why it matters, how it's built, and how the loop runs.</p>
+    </div>
+    <div class="media">
+      <div class="stage" id="stage">
+        <img class="on" src="assets/slide-1.jpg" alt="Slide 1: Leeloo, by Team The Fifth Element">
+        <img src="assets/slide-2.jpg" alt="Slide 2: Not every abandoned cart needs a fixed discount" loading="lazy">
+        <img src="assets/slide-3.jpg" alt="Slide 3: Meet Leeloo, one agent, five platforms" loading="lazy">
+        <img src="assets/slide-4.jpg" alt="Slide 4: From an abandoned cart to personalized incentives to convert" loading="lazy">
+        <button class="arrow prev" id="prev" aria-label="Previous slide"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 4 6.5 10l6 6"/></svg></button>
+        <button class="arrow next" id="next" aria-label="Next slide"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4 6 6-6 6"/></svg></button>
+      </div>
+    </div>
+    <div class="deck-bar">
+      <div class="dots" id="dots">
+        <button class="dot on" aria-label="Slide 1"></button><button class="dot" aria-label="Slide 2"></button><button class="dot" aria-label="Slide 3"></button><button class="dot" aria-label="Slide 4"></button>
+        <span class="count" id="count">1 / 4</span>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn secondary sm" id="fs">Full screen</button>
+        <a class="btn primary sm" href="Leeloo-slides.pdf" download>Download PDF</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="team">
+  <div class="wrap">
+    <div class="sh">
+      <span class="badge purple">Team The Fifth Element</span>
+      <h2>The people behind Leeloo</h2>
+    </div>
+    <div class="team">
+      <div class="card"><div class="avatar">JP</div><b>János Pintér</b><span>Head of AI Research</span></div>
+      <div class="card"><div class="avatar">PP</div><b>Péter Pintér</b><span>Product Expert</span></div>
+      <div class="card"><div class="avatar">SS</div><b>Scott Shurson</b><span>Product Solutions Consultant</span></div>
+      <div class="card"><div class="avatar">PS</div><b>Péter Szabó</b><span>Product Owner</span></div>
+      <div class="card"><div class="avatar">JT</div><b>James Thornton</b><span>Sr. Solution Consultant</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" style="padding-top:24px;padding-bottom:0">
+  <div class="wrap">
+    <div class="close">
+      <div class="blobs">
+        <div class="blob" style="width:420px;height:420px;background:var(--yellow-bright);left:-120px;top:-140px;opacity:.5"></div>
+        <div class="blob" style="width:360px;height:360px;background:var(--magenta);right:-160px;bottom:-160px;opacity:.4"></div>
+      </div>
+      <div class="inner">
+        <h2>Ready to see AI-driven loyalty in action?</h2>
+        <p>Book a personal walkthrough with a loyalty expert.</p>
+        <a class="btn primary lg" href="https://antavo.com/book-demo/">Book a demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h4>Built with Antavo AI Loyalty Cloud</h4>
+    <img class="big" src="assets/antavo-logo-tagline-white.png" alt="Antavo, AI Loyalty Cloud">
+    <div class="row"><span>First place, 2026 Bloomreach Composable AI Hackathon · Team The Fifth Element</span><span>© 2026 Antavo Ltd.</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var imgs=[].slice.call(document.querySelectorAll('#stage img')),
+      dots=[].slice.call(document.querySelectorAll('#dots .dot')),
+      count=document.getElementById('count'),stage=document.getElementById('stage'),i=0;
+  function go(n){i=(n+imgs.length)%imgs.length;
+    imgs.forEach(function(el,k){el.classList.toggle('on',k===i)});
+    dots.forEach(function(el,k){el.classList.toggle('on',k===i)});
+    count.textContent=(i+1)+' / '+imgs.length;}
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.getElementById('next').onclick=function(){go(i+1)};
+  dots.forEach(function(el,k){el.onclick=function(){go(k)}});
+  document.addEventListener('keydown',function(e){
+    if(e.target.tagName==='VIDEO')return;
+    if(e.key==='ArrowRight')go(i+1); if(e.key==='ArrowLeft')go(i-1);});
+  var x0=null;
+  stage.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+  stage.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>40)go(dx<0?i+1:i-1);x0=null});
+  var fs=document.getElementById('fs');
+  fs.onclick=function(){
+    if(document.fullscreenElement)document.exitFullscreen();
+    else if(stage.requestFullscreen)stage.requestFullscreen();
+    else if(stage.webkitRequestFullscreen)stage.webkitRequestFullscreen();};
+  if(!(stage.requestFullscreen||stage.webkitRequestFullscreen))fs.style.display='none';
+})();
+</script>
+</body>
+</html>
